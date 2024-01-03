@@ -1,0 +1,1236 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Kunal\_Ghosh\_AE\_291\_Assignment\_4\_CG}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \setcounter{secnumdepth}{0}
+    
+    
+
+    
+    \hypertarget{name-kunal-ghosh}{%
+\section{Name: Kunal Ghosh}\label{name-kunal-ghosh}}
+
+    \hypertarget{course-m.tech-aerospace-engineering}{%
+\section{Course: M.Tech (Aerospace
+Engineering)}\label{course-m.tech-aerospace-engineering}}
+
+    \hypertarget{subject-ae-291-matrix-computations}{%
+\section{Subject: AE 291 (Matrix
+Computations)}\label{subject-ae-291-matrix-computations}}
+
+    \hypertarget{sap-no.-6000007645}{%
+\section{SAP No.: 6000007645}\label{sap-no.-6000007645}}
+
+    \hypertarget{s.r.-no.-05-01-00-10-42-22-1-21061}{%
+\section{S.R. No.:
+05-01-00-10-42-22-1-21061}\label{s.r.-no.-05-01-00-10-42-22-1-21061}}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+    \hypertarget{importing-the-necessary-libraries}{%
+\section{Importing the necessary
+libraries}\label{importing-the-necessary-libraries}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{matplotlib} \PY{k+kn}{import} \PY{n}{cm}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{sys}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{problem}{%
+\section{Problem:}\label{problem}}
+
+\hypertarget{solving-2d-poissons-problem-using-steepest-descent-and-conjugate-gradient-iterative-methods}{%
+\subsection{Solving 2D Poisson's problem using Steepest Descent and
+Conjugate Gradient iterative
+methods}\label{solving-2d-poissons-problem-using-steepest-descent-and-conjugate-gradient-iterative-methods}}
+
+\hypertarget{consider-the-2d-poissons-equation-in-the-domain-omega-01-times-0-1-the-unit-square}{%
+\subsection{\texorpdfstring{Consider the 2D Poisson's equation in the
+domain \(\Omega\) = {[}0,1{]} \(\times\) {[}0, 1{]}, the unit
+square:}{Consider the 2D Poisson's equation in the domain \textbackslash{}Omega = {[}0,1{]} \textbackslash{}times {[}0, 1{]}, the unit square:}}\label{consider-the-2d-poissons-equation-in-the-domain-omega-01-times-0-1-the-unit-square}}
+
+    \[-\frac{\partial^2 u}{\partial x^2 } -\frac{\partial^2 u}{\partial y^2 } = f\qquad in \qquad \Omega, \tag{1}\]
+
+    \hypertarget{with-the-boundary-condition}{%
+\subsection{with the boundary
+condition}\label{with-the-boundary-condition}}
+
+\[u = g \qquad on \qquad \partial \Omega \tag{2}\]
+
+    \hypertarget{where-f-and-g-are-given-functions-and-ux3c9-represents-the-boundary-of-ux3c9.-eq.-1-can-be-discretized-using-the-centered-finite-difference-method-as-explained-in-the-class.}{%
+\subsection{where f and g are given functions, and ∂Ω represents the
+boundary of Ω. Eq. 1 can be discretized using the centered Finite
+difference method (as explained in the
+class).}\label{where-f-and-g-are-given-functions-and-ux3c9-represents-the-boundary-of-ux3c9.-eq.-1-can-be-discretized-using-the-centered-finite-difference-method-as-explained-in-the-class.}}
+
+    \hypertarget{consider-the-case-where-f-0-and-g-is-given-as}{%
+\subsection{Consider the case where f = 0, and g is given
+as,}\label{consider-the-case-where-f-0-and-g-is-given-as}}
+
+    \[g(x,y) = \begin{cases}
+0 \qquad\qquad\qquad if\:x = 0
+\\
+y \qquad\qquad\qquad if\:x = 1
+\\
+(x-1)sin(x) \:\:\:\:\:\:\: if\:y = 0
+\\
+x(2-x) \qquad\:\:\:\:\:\: if\:y = 1
+\end{cases}\]
+
+    \hypertarget{write-two-separate-codes-one-for-steepest-descent-sd-and-other-for-conjugate-gradient-cg-for-solving-the-discretized-poissons-equation.-for-both-the-methods-take-the-initial-guess-as-u0-0-and-consider-three-mesh-intervals-h-110-h-120-and-h-140.-the-iterations-should-be-continued-until-the-relative-change-in-the-solution-u-from-one-iteration-to-another-is-less-than-10-8.-more-precisely-stop-the-iterations-when}{%
+\subsection{\texorpdfstring{Write two separate codes; one for Steepest
+Descent (SD) and other for Conjugate Gradient (CG) for solving the
+discretized Poisson's equation. For both the methods, take the initial
+guess as \(u^{(0)}\) = 0, and consider three mesh intervals: h = 1/10, h
+= 1/20 and h = 1/40. The iterations should be continued until the
+relative change in the solution u from one iteration to another is less
+than \(10^{-8}\). More precisely, stop the iterations
+when}{Write two separate codes; one for Steepest Descent (SD) and other for Conjugate Gradient (CG) for solving the discretized Poisson's equation. For both the methods, take the initial guess as u\^{}\{(0)\} = 0, and consider three mesh intervals: h = 1/10, h = 1/20 and h = 1/40. The iterations should be continued until the relative change in the solution u from one iteration to another is less than 10\^{}\{-8\}. More precisely, stop the iterations when}}\label{write-two-separate-codes-one-for-steepest-descent-sd-and-other-for-conjugate-gradient-cg-for-solving-the-discretized-poissons-equation.-for-both-the-methods-take-the-initial-guess-as-u0-0-and-consider-three-mesh-intervals-h-110-h-120-and-h-140.-the-iterations-should-be-continued-until-the-relative-change-in-the-solution-u-from-one-iteration-to-another-is-less-than-10-8.-more-precisely-stop-the-iterations-when}}
+
+    \[\frac{||u^{(k+1)}-u^{(k)}||_2}{||u^{(k+1)}||_2} < 10^{-8} \tag{3}\]
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+    \hypertarget{along-with-the-codes-submit-a-short-report-with-the-following-items}{%
+\subsection{Along with the codes, submit a short report with the
+following
+items:}\label{along-with-the-codes-submit-a-short-report-with-the-following-items}}
+
+    \hypertarget{for-each-method-sd-and-cg-for-each-h-plot-the-relative-change-in-the-solution-lhs-of-eq.-3-versus-the-iteration-index-k.-in-the-plot-the-relative-change-in-the-solution-should-be-in-base-10-logarithmic-scale-for-example-see-the-command-semilogy-in-matlab}{%
+\subsection{1. For each method (SD and CG), for each ''h'', plot the
+relative change in the solution (LHS of Eq. 3) versus the iteration
+index (k). In the plot, the relative change in the solution should be in
+base-10 logarithmic scale (For example, see the command ''semilogy'' in
+matlab)}\label{for-each-method-sd-and-cg-for-each-h-plot-the-relative-change-in-the-solution-lhs-of-eq.-3-versus-the-iteration-index-k.-in-the-plot-the-relative-change-in-the-solution-should-be-in-base-10-logarithmic-scale-for-example-see-the-command-semilogy-in-matlab}}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+    \hypertarget{answer-1-conjugate-gradient-cg}{%
+\subsection{Answer (1): Conjugate Gradient
+(CG)}\label{answer-1-conjugate-gradient-cg}}
+
+    \hypertarget{set-of-values-of-the-h}{%
+\subsection{Set of values of the h}\label{set-of-values-of-the-h}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{H} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{40}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{defining-the-domain-omega-01-times-0-1}{%
+\subsection{\texorpdfstring{Defining the domain: \(\Omega\) = {[}0,1{]}
+\(\times\) {[}0,
+1{]}}{Defining the domain: \textbackslash{}Omega = {[}0,1{]} \textbackslash{}times {[}0, 1{]}}}\label{defining-the-domain-omega-01-times-0-1}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x\PYZus{}0} \PY{o}{=} \PY{l+m+mi}{0}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x\PYZus{}l} \PY{o}{=} \PY{l+m+mi}{1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y\PYZus{}0} \PY{o}{=} \PY{l+m+mi}{0}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y\PYZus{}l} \PY{o}{=} \PY{l+m+mi}{1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{function-to-implement-the-boundary-conditions}{%
+\subsection{Function to implement the boundary
+conditions}\label{function-to-implement-the-boundary-conditions}}
+
+    \[g(x,y) = \begin{cases}
+0 \qquad\qquad\qquad if\:x = 0
+\\
+y \qquad\qquad\qquad if\:x = 1
+\\
+(x-1)sin(x) \:\:\:\:\:\:\: if\:y = 0
+\\
+x(2-x) \qquad\:\:\:\:\:\: if\:y = 1
+\end{cases}\]
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{g}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    g(x,y) sets the boundary conditions at based on the coordinates of the node, x and y.}
+\PY{l+s+sd}{    If the given node does not lie on the boundary then 0 will be returned.}
+\PY{l+s+sd}{    x: x coordinate}
+\PY{l+s+sd}{    y: y coordinate}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{if} \PY{n}{x} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+        \PY{k}{return} \PY{l+m+mi}{0}
+    \PY{k}{if} \PY{n}{x} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{:}
+        \PY{k}{return} \PY{n}{y}
+    \PY{k}{if} \PY{n}{y} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+        \PY{k}{return} \PY{p}{(}\PY{n}{x}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+    \PY{k}{if} \PY{n}{y} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{:}
+        \PY{k}{return} \PY{n}{x}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)}
+    \PY{k}{else}\PY{p}{:} 
+        \PY{k}{return} \PY{l+m+mi}{0}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \[f = 0\]
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{f}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    f(x,y) evaluated the function f of the question based on the coordinates of the node, x and y.}
+\PY{l+s+sd}{    x: x coordinate}
+\PY{l+s+sd}{    y: y coordinate}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{return} \PY{l+m+mi}{0}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{stopping-criteria}{%
+\subsection{Stopping criteria:}\label{stopping-criteria}}
+
+    \[\frac{||u^{(k+1)}-u^{(k)}||_2}{||u^{(k+1)}||_2} < 10^{-8} \tag{3}\]
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{Error\PYZus{}Function}\PY{p}{(}\PY{n}{u\PYZus{}new}\PY{p}{,}\PY{n}{u}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Error\PYZus{}Function(u\PYZus{}new,u) evaluates the error.}
+\PY{l+s+sd}{    u\PYZus{}new: u(k+1)}
+\PY{l+s+sd}{    u: u(k)}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    
+    \PY{c+c1}{\PYZsh{} Calculating the numerator}
+    \PY{n}{temp} \PY{o}{=} \PY{p}{(}\PY{p}{(}\PY{p}{(}\PY{n}{u\PYZus{}new}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{n}{u}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mf}{0.5}
+    
+    \PY{c+c1}{\PYZsh{} Calculating the denominator}
+    \PY{n}{temp\PYZus{}1} \PY{o}{=} \PY{p}{(}\PY{p}{(}\PY{p}{(}\PY{n}{u\PYZus{}new}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mf}{0.5}
+    
+    \PY{c+c1}{\PYZsh{} Calculating the error}
+    \PY{n}{temp} \PY{o}{=} \PY{n}{temp}\PY{o}{/}\PY{n}{temp\PYZus{}1}
+    
+    \PY{k}{return} \PY{n}{temp}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Tolerance} \PY{o}{=} \PY{l+m+mf}{1e\PYZhy{}8}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{a-dictionary-to-store-errors}{%
+\subsection{A dictionary to store
+errors}\label{a-dictionary-to-store-errors}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Error} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{a-dictionary-to-store-u}{%
+\subsection{A dictionary to store u}\label{a-dictionary-to-store-u}}
+
+    \hypertarget{note-we-will-be-storing-u-such-that-u-in-mathbbr2}{%
+\subsection{\texorpdfstring{NOTE: We will be storing u such that
+\(u \in \mathbb{R}^{2}\)}{NOTE: We will be storing u such that u \textbackslash{}in \textbackslash{}mathbb\{R\}\^{}\{2\}}}\label{note-we-will-be-storing-u-such-that-u-in-mathbbr2}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{U} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{a-dictionary-to-store-meshgrids}{%
+\subsection{A dictionary to store
+meshgrids}\label{a-dictionary-to-store-meshgrids}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}Y\PYZus{}dict} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{function-to-calculate-the-product-of-two-matrices}{%
+\subsection{Function to calculate the product of two
+matrices}\label{function-to-calculate-the-product-of-two-matrices}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{MatMul}\PY{p}{(}\PY{n}{A}\PY{p}{,}\PY{n}{B}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    MatMul(A,B) multiply two matrices A and B of compatible sizes}
+\PY{l+s+sd}{    NOTE: This function is a generic matrix multiplication function.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    
+    \PY{c+c1}{\PYZsh{} We are copying A and B because we will be reshaping them}
+    \PY{n}{a} \PY{o}{=} \PY{n}{A}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{b} \PY{o}{=} \PY{n}{B}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Checking the dimension of a}
+    \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{a}\PY{o}{.}\PY{n}{shape}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{l+m+mi}{2}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{A is NOT a matrix.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{sys}\PY{o}{.}\PY{n}{exit}\PY{p}{(}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Checking the dimension of b}
+    \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{b}\PY{o}{.}\PY{n}{shape}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{l+m+mi}{2}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{B is NOT a matrix.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{sys}\PY{o}{.}\PY{n}{exit}\PY{p}{(}\PY{p}{)}
+            
+    \PY{c+c1}{\PYZsh{} a will be I x J}
+    \PY{c+c1}{\PYZsh{} b will be J x K}
+    
+    \PY{n}{I} \PY{o}{=} \PY{n}{a}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} To take care of the vectors}
+    \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{a}\PY{o}{.}\PY{n}{shape}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{l+m+mi}{2}\PY{p}{:}
+        \PY{n}{J} \PY{o}{=} \PY{l+m+mi}{1}
+    \PY{k}{else}\PY{p}{:}
+        \PY{n}{J} \PY{o}{=} \PY{n}{a}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} To take care of the vectors    }
+    \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{b}\PY{o}{.}\PY{n}{shape}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{l+m+mi}{2}\PY{p}{:}
+        \PY{n}{K} \PY{o}{=} \PY{l+m+mi}{1}
+    \PY{k}{else}\PY{p}{:}
+        \PY{n}{K} \PY{o}{=} \PY{n}{b}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} Checking if the dimensions of A and B are compatible for multiplication or NOT.    }
+    \PY{k}{if} \PY{n}{J} \PY{o}{!=} \PY{n}{b}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Dimensions of A and B are NOT compatible.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{sys}\PY{o}{.}\PY{n}{exit}\PY{p}{(}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Prod matrix will store the results}
+    \PY{n}{Prod} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{I}\PY{p}{,}\PY{n}{K}\PY{p}{)}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} a will be I x J}
+    \PY{n}{a} \PY{o}{=} \PY{n}{a}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{I}\PY{p}{,}\PY{n}{J}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} b will be J x K}
+    \PY{n}{b} \PY{o}{=} \PY{n}{b}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{J}\PY{p}{,}\PY{n}{K}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Multiplying the matrix A and matrix B}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{I}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{J}\PY{p}{)}\PY{p}{:}
+            \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{K}\PY{p}{)}\PY{p}{:}
+                \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{n}{a}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{o}{*}\PY{n}{b}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Returning the matrix product}
+    \PY{k}{return} \PY{n}{Prod}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{discretization}{%
+\subsection{Discretization:}\label{discretization}}
+
+    \[-\frac{\partial^2 u}{\partial x^2 } -\frac{\partial^2 u}{\partial y^2 } = f\qquad in \qquad \Omega\]
+
+    \[\frac{\partial^2 u}{\partial x^2 } + \frac{\partial^2 u}{\partial y^2 } = -f\qquad in \qquad \Omega\]
+
+    \[\Delta x = \Delta y = h\]
+
+    \[\frac{u_{(i+1,j)} - 2u_{(i,j)} + u_{(i-1,j)}}{h^2 } + \frac{u_{(i,j+1)} - 2u_{(i,j)} + u_{(i,j-1)}}{h^2 } = f_{(i,j)}\]
+
+    or,
+\[\frac{u_{(i+1,j)} - 2u_{(i,j)} + u_{(i-1,j)} + u_{(i,j+1)} - 2u_{(i,j)} + u_{(i,j-1)}}{h^2 } = f_{(i,j)}\]
+
+    or,
+\[\frac{u_{(i+1,j)} + u_{(i,j+1)} - 4u_{(i,j)} + u_{(i-1,j)} + u_{(i,j-1)}}{h^2 } = f_{(i,j)}\]
+
+    or,
+\[u_{(i+1,j)} + u_{(i,j+1)} - 4u_{(i,j)} + u_{(i-1,j)} + u_{(i,j-1)} = h^2f_{(i,j)}\]
+
+    or,
+\[u_{(i+1,j)} + u_{(i,j+1)} - 4u_{(i,j)} + u_{(i,j-1)} + u_{(i-1,j)} = h^2f_{(i,j)}\]
+
+    Let, \[I = I(i,j) = (n_x \times i) + j\]
+
+    So, \[u_{(i,j)} = u_{I}\]
+
+    So, \[I(i,j-1) = (n \times i) + j - 1\]
+
+    or, \[I(i,j-1) = I - 1\]
+
+    So, \[u_{(i,j-1)} = u_{I-1}\]
+
+    Also, \[I(i,j+1) = (n_x \times i) + j + 1\]
+
+    or, \[I(i,j+1) = I + 1\]
+
+    So, \[u_{(i,j+1)} = u_{I+1}\]
+
+    Also, \[I(i-1,j) = (n_x \times (i-1)) + j\]
+
+    or, \[I(i-1,j) = I - n_x\]
+
+    So, \[u_{(i-1,j)} = u_{I-n_x}\]
+
+    Also, \[I(i+1,j) = (n_x \times (i+1)) + j\]
+
+    or, \[I(i+1,j) = I + n_x\]
+
+    So, \[u_{(i+1,j)} = u_{I + n_x}\]
+
+    So, \[u_{I+n_x} + u_{I+1} - 4u_{I} + u_{I-1} + u_{I-n_x} = h^2f_{I}\]
+
+    \hypertarget{function-to-calculate-the-product-of-a-and-any-vector}{%
+\subsection{Function to calculate the product of A and any
+vector}\label{function-to-calculate-the-product-of-a-and-any-vector}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{MatMul\PYZus{}A\PYZus{}Vector}\PY{p}{(}\PY{n}{b}\PY{p}{,}\PY{n}{n}\PY{p}{,}\PY{n}{n\PYZus{}x}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    MatMul\PYZus{}A\PYZus{}Vector(b,n,n\PYZus{}x) multiply matrix A for this particular case and a generic vector b of compatible sizes.}
+\PY{l+s+sd}{    NOTE: We are exploiting the sparse nature of the matrix A.}
+\PY{l+s+sd}{    NOTE: This function is specific to this problem only and NOT a generic matrix multiplication function.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    
+    \PY{c+c1}{\PYZsh{} A will be I x J}
+    \PY{c+c1}{\PYZsh{} b will be J x K}
+    
+    \PY{n}{I} \PY{o}{=} \PY{n}{n}
+    
+    \PY{c+c1}{\PYZsh{} Checking the dimension of b}
+    \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{b}\PY{o}{.}\PY{n}{shape}\PY{p}{)} \PY{o}{!=} \PY{l+m+mi}{2}\PY{p}{:}
+        \PY{k}{if} \PY{n}{b}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{!=} \PY{l+m+mi}{1}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b is NOT a vector.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{sys}\PY{o}{.}\PY{n}{exit}\PY{p}{(}\PY{p}{)}
+            
+    \PY{c+c1}{\PYZsh{} Checking if the dimensions of A and b are compatible for multiplication or NOT.            }
+    \PY{k}{if} \PY{n}{b}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{!=} \PY{n}{n}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Dimensions of A and b are not compatible.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{sys}\PY{o}{.}\PY{n}{exit}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{J} \PY{o}{=} \PY{n}{n}
+    
+    \PY{n}{K} \PY{o}{=} \PY{l+m+mi}{1}
+    
+    \PY{c+c1}{\PYZsh{} Prod matrix will store the results}
+    \PY{n}{Prod} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{I}\PY{p}{,}\PY{n}{K}\PY{p}{)}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} b will be J x K}
+    \PY{n}{b} \PY{o}{=} \PY{n}{b}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{J}\PY{p}{,}\PY{n}{K}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Doing the matrix multiplication by only multiplying the non\PYZhy{}zero elements}
+
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{n\PYZus{}x}\PY{p}{)}\PY{p}{:}
+        \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}x}\PY{p}{,}\PY{n}{I}\PY{o}{\PYZhy{}}\PY{n}{n\PYZus{}x}\PY{p}{)}\PY{p}{:}
+        \PY{k}{if} \PY{p}{(}\PY{n}{i}\PY{o}{\PYZpc{}}\PY{k}{n\PYZus{}x} == 0) or ((i+1)\PYZpc{}n\PYZus{}x == 0):
+            \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{k}{else}\PY{p}{:}
+            \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{o}{*}\PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+            \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+            \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+            \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{n}{n\PYZus{}x}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+            \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{n}{n\PYZus{}x}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{I}\PY{o}{\PYZhy{}}\PY{n}{n\PYZus{}x}\PY{p}{,}\PY{n}{I}\PY{p}{)}\PY{p}{:}
+        \PY{n}{Prod}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} Returning the matrix product}
+    \PY{k}{return} \PY{n}{Prod}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{conjugate-gradient-cg-algorithm-for-au-b}{%
+\subsection{Conjugate Gradient (CG) Algorithm for Au =
+b}\label{conjugate-gradient-cg-algorithm-for-au-b}}
+
+    \(r^{(0)} \leftarrow (b - Au^{(0)})\)
+
+    \(P^{(0)} \leftarrow r^{(0)}\)
+
+    do until convergence:
+
+    \(\qquad q^{(k)} \leftarrow AP^{(k)}\)
+
+    \(\qquad \alpha^{(k)} \leftarrow \frac{(r^{(k)})^Tr^{(k)}}{(P^{(k)})^Tq^{(k)}}\)
+
+    \(\qquad u^{(k+1)} \leftarrow (u^{(k)} + \alpha^{(k)}P^{(k)})\)
+
+    \(\qquad r^{(k+1)} \leftarrow (r^{(k)} + \alpha^{(k)}q^{(k)})\)
+
+    \(\qquad \beta^{(k)} \leftarrow \frac{(r^{(k+1)})^Tr^{(k+1)}}{(r^{(k)})^Tr^{(k)}}\)
+
+    \(\qquad P^{(k+1)} \leftarrow (r^{(k+1)} + \beta^{(k)}P^{(k)})\)
+
+    \(\qquad k \leftarrow (k+1)\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{CG\PYZus{}Solver}\PY{p}{(}\PY{n}{r}\PY{p}{,}\PY{n}{u}\PY{p}{,}\PY{n}{U}\PY{p}{,}\PY{n}{Error}\PY{p}{,}\PY{n}{Tolerance}\PY{p}{,}\PY{n}{f}\PY{p}{,}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{h}\PY{p}{,}\PY{n}{n}\PY{p}{,}\PY{n}{n\PYZus{}x}\PY{p}{,}\PY{n}{n\PYZus{}y}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    CG\PYZus{}Solver(b,u,U,Error,Tolerance,f,x,y,h,n\PYZus{}x,n\PYZus{}y): Solves the given poisson equation using the Conjugate Gradient (CG) method}
+\PY{l+s+sd}{    r: r is the residual but b is stored in r, where Au = b and r = b\PYZhy{}(Au)}
+\PY{l+s+sd}{    u: Initial value of u in the computational domain}
+\PY{l+s+sd}{    U: Dictionary to store u for different values of h}
+\PY{l+s+sd}{    Error: Dictionary to store error at each iterations for different values of h}
+\PY{l+s+sd}{    Tolerance: Stopping Criteria}
+\PY{l+s+sd}{    f: RHS of the equation}
+\PY{l+s+sd}{    x: X Meshgrid}
+\PY{l+s+sd}{    y: Y Meshgrid}
+\PY{l+s+sd}{    h: Grid Spacing}
+\PY{l+s+sd}{    n: Total number of grid points}
+\PY{l+s+sd}{    n\PYZus{}x: Number of the grid points in the x\PYZhy{}directions}
+\PY{l+s+sd}{    n\PYZus{}y: Number of the grid points in the y\PYZhy{}directions}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    
+    \PY{c+c1}{\PYZsh{} Intializing the tolerance achieved}
+    \PY{n}{temp} \PY{o}{=} \PY{n}{Tolerance} \PY{o}{+} \PY{l+m+mi}{1}
+
+    \PY{c+c1}{\PYZsh{} Error over iterations for some particular h}
+    \PY{n}{error} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Conjugate Gradient (CG) method}
+    
+    \PY{c+c1}{\PYZsh{} r = b\PYZhy{}(Au)}
+    \PY{n}{r} \PY{o}{=} \PY{n}{r}\PY{o}{\PYZhy{}}\PY{n}{MatMul\PYZus{}A\PYZus{}Vector}\PY{p}{(}\PY{n}{u}\PY{p}{,}\PY{n}{n}\PY{p}{,}\PY{n}{n\PYZus{}x}\PY{p}{)}
+    \PY{n}{P} \PY{o}{=} \PY{n}{r}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        
+    \PY{c+c1}{\PYZsh{} While loop until the stopping criteria is met}
+    \PY{k}{while} \PY{n}{temp} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{Tolerance}\PY{p}{:}
+        \PY{n}{u\PYZus{}old} \PY{o}{=} \PY{n}{u}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} q = AP}
+        \PY{n}{q} \PY{o}{=} \PY{n}{MatMul\PYZus{}A\PYZus{}Vector}\PY{p}{(}\PY{n}{P}\PY{p}{,}\PY{n}{n}\PY{p}{,}\PY{n}{n\PYZus{}x}\PY{p}{)}
+        \PY{n}{alpha} \PY{o}{=} \PY{n}{MatMul}\PY{p}{(}\PY{n}{r}\PY{o}{.}\PY{n}{T}\PY{p}{,}\PY{n}{r}\PY{p}{)}\PY{o}{/}\PY{n}{MatMul}\PY{p}{(}\PY{n}{P}\PY{o}{.}\PY{n}{T}\PY{p}{,}\PY{n}{q}\PY{p}{)}
+        \PY{n}{u} \PY{o}{=} \PY{n}{u} \PY{o}{+} \PY{p}{(}\PY{n}{alpha}\PY{o}{*}\PY{n}{P}\PY{p}{)}
+        \PY{n}{r\PYZus{}old} \PY{o}{=} \PY{n}{r}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        \PY{n}{r} \PY{o}{=} \PY{n}{r} \PY{o}{\PYZhy{}} \PY{p}{(}\PY{n}{alpha}\PY{o}{*}\PY{n}{q}\PY{p}{)}
+        \PY{n}{beta} \PY{o}{=} \PY{n}{MatMul}\PY{p}{(}\PY{n}{r}\PY{o}{.}\PY{n}{T}\PY{p}{,}\PY{n}{r}\PY{p}{)}\PY{o}{/}\PY{n}{MatMul}\PY{p}{(}\PY{n}{r\PYZus{}old}\PY{o}{.}\PY{n}{T}\PY{p}{,}\PY{n}{r\PYZus{}old}\PY{p}{)}
+        \PY{n}{P}\PY{o}{=} \PY{n}{r} \PY{o}{+} \PY{p}{(}\PY{n}{beta}\PY{o}{*}\PY{n}{P}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Calculating the relative error}
+        \PY{n}{temp} \PY{o}{=} \PY{n}{Error\PYZus{}Function}\PY{p}{(}\PY{n}{u}\PY{p}{,}\PY{n}{u\PYZus{}old}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Storing the errors corresponding to each iteration}
+        \PY{n}{error}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{temp}\PY{p}{)}
+        
+    \PY{c+c1}{\PYZsh{} Storing u in the dictionary for some particular h}
+    \PY{n}{U}\PY{p}{[}\PY{n}{h}\PY{p}{]} \PY{o}{=} \PY{n}{u\PYZus{}old}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{p}{(}\PY{n}{n\PYZus{}x}\PY{p}{,}\PY{n}{n\PYZus{}y}\PY{p}{)}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Storing error in the dictionary for some particular h}
+    \PY{n}{Error}\PY{p}{[}\PY{n}{h}\PY{p}{]} \PY{o}{=} \PY{n}{error}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}Y\PYZus{}dict}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\{\}
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Iterating over different values of h (Mesh Interval)}
+\PY{k}{for} \PY{n}{h} \PY{o+ow}{in} \PY{n}{H}\PY{p}{:}
+    
+    \PY{c+c1}{\PYZsh{} Mesh intervals}
+    \PY{n}{dx} \PY{o}{=} \PY{n}{h}
+    \PY{n}{dy} \PY{o}{=} \PY{n}{h}
+
+    \PY{c+c1}{\PYZsh{} Number of grid points in x\PYZhy{}directions}
+    \PY{n}{n\PYZus{}x} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{x\PYZus{}l}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}0}\PY{p}{)}\PY{o}{/}\PY{n}{h} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Number of grid points in y\PYZhy{}directions}
+    \PY{n}{n\PYZus{}y} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{y\PYZus{}l}\PY{o}{\PYZhy{}}\PY{n}{y\PYZus{}0}\PY{p}{)}\PY{o}{/}\PY{n}{h} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Total number of grid points}
+    \PY{n}{n} \PY{o}{=} \PY{n}{n\PYZus{}x}\PY{o}{*}\PY{n}{n\PYZus{}y}
+
+    \PY{c+c1}{\PYZsh{} A matrix to store grid numbering associated with a particular h}
+    \PY{n}{I} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n\PYZus{}x}\PY{p}{,}\PY{n}{n\PYZus{}y}\PY{p}{)}\PY{p}{,}\PY{n}{dtype} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{int32}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} A matrix to store the solution associated with a particular h}
+    \PY{n}{u} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n\PYZus{}x}\PY{p}{,}\PY{n}{n\PYZus{}y}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Creating a meshgrid}
+    \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{x\PYZus{}0}\PY{p}{,}\PY{n}{x\PYZus{}l}\PY{o}{+}\PY{n}{dx}\PY{p}{,}\PY{n}{dx}\PY{p}{)}
+    \PY{n}{y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{y\PYZus{}0}\PY{p}{,}\PY{n}{y\PYZus{}l}\PY{o}{+}\PY{n}{dy}\PY{p}{,}\PY{n}{dy}\PY{p}{)}
+    \PY{n}{X}\PY{p}{,}\PY{n}{Y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{meshgrid}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{indexing} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ij}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Storing meshgrids}
+    \PY{n}{X\PYZus{}Y\PYZus{}dict}\PY{p}{[}\PY{n}{h}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{X}\PY{p}{,}\PY{n}{Y}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Applying the boundary conditions and storing the grid numbers}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+            
+            \PY{c+c1}{\PYZsh{} Applying the boundary conditions}
+            \PY{n}{u}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]} \PY{o}{=} \PY{n}{g}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{n}{y}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}
+            
+            \PY{c+c1}{\PYZsh{} Storing the grid numbers}
+            \PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{n\PYZus{}x}\PY{o}{*}\PY{n}{i}\PY{p}{)}\PY{o}{+}\PY{n}{j}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Storing u as a vector}
+    \PY{n}{u\PYZus{}linear} \PY{o}{=} \PY{n}{u}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Treating vector as a matrix}
+    \PY{n}{u\PYZus{}linear} \PY{o}{=} \PY{n}{u\PYZus{}linear}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{u\PYZus{}linear}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} RHS vector stored as matrix}
+    \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Applying the boundary conditions}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+            \PY{k}{if} \PY{n}{i} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:} 
+                \PY{n}{b}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{u\PYZus{}linear}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{p}{(}\PY{n}{h}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{*}\PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{n}{y}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+            \PY{k}{if} \PY{n}{i} \PY{o}{==} \PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                \PY{n}{b}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{u\PYZus{}linear}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{p}{(}\PY{n}{h}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{*}\PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{n}{y}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+            \PY{k}{if} \PY{n}{j} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:} 
+                \PY{n}{b}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{u\PYZus{}linear}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{p}{(}\PY{n}{h}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{*}\PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{n}{y}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+            \PY{k}{if} \PY{n}{j} \PY{o}{==} \PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                \PY{n}{b}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{u\PYZus{}linear}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{p}{(}\PY{n}{h}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{*}\PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{n}{y}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+            \PY{n}{b}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{]} \PY{o}{=}  \PY{n}{b}\PY{p}{[}\PY{n}{I}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{]} \PY{o}{+} \PY{p}{(}\PY{p}{(}\PY{n}{h}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{*}\PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{n}{y}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Intializing the u at the current iteraion with zeros}
+    \PY{n}{u} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{p}{(}\PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{x\PYZus{}l}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}0}\PY{p}{)}\PY{o}{/}\PY{n}{dx}\PY{p}{)}\PY{p}{)}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{(}\PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{y\PYZus{}l}\PY{o}{\PYZhy{}}\PY{n}{y\PYZus{}0}\PY{p}{)}\PY{o}{/}\PY{n}{dy}\PY{p}{)}\PY{p}{)}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Applying the boundary conditions to u}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+            \PY{n}{u}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]} \PY{o}{=} \PY{n}{g}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{n}{y}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Solving the system of equation using CG Method}
+    \PY{c+c1}{\PYZsh{} NOTE: b will be modified after the excution of this function}
+    \PY{n}{CG\PYZus{}Solver}\PY{p}{(}\PY{n}{b}\PY{p}{,}\PY{n}{u\PYZus{}linear}\PY{p}{,}\PY{n}{U}\PY{p}{,}\PY{n}{Error}\PY{p}{,}\PY{n}{Tolerance}\PY{p}{,}\PY{n}{f}\PY{p}{,}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{h}\PY{p}{,}\PY{n}{n}\PY{p}{,}\PY{n}{n\PYZus{}x}\PY{p}{,}\PY{n}{n\PYZus{}y}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Number of iterations required}
+    \PY{n}{iteraions} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{Error}\PY{p}{[}\PY{n}{h}\PY{p}{]}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Printing the value of h}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{For h = }\PY{l+s+si}{\PYZob{}}\PY{n}{h}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Printing the number of iterations required}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of iterations required: }\PY{l+s+si}{\PYZob{}}\PY{n}{iteraions}\PY{l+s+si}{\PYZcb{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+For h = 0.1:
+Number of iterations required: 29
+
+
+For h = 0.05:
+Number of iterations required: 60
+
+
+For h = 0.025:
+Number of iterations required: 118
+
+
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{for} \PY{n}{h}\PY{p}{,}\PY{n}{error} \PY{o+ow}{in} \PY{n}{Error}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{semilogy}\PY{p}{(}\PY{n}{error}\PY{p}{,}\PY{n}{label} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{h = }\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{n+nb}{str}\PY{p}{(}\PY{n}{h}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} NOTE: Here, the iteration index k starts from 0}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iteration index (k)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Relative Error}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Relative Error vs Iteration index (k)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_89_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+    \hypertarget{for-each-method-sd-and-cg-for-each-h-show-the-3d-surface-plot-of-the-final-solution-u-as-a-function-of-x-and-y.}{%
+\subsection{2. For each method (SD and CG), for each ''h'', show the 3D
+surface plot of the final solution u (as a function of x and
+y).}\label{for-each-method-sd-and-cg-for-each-h-show-the-3d-surface-plot-of-the-final-solution-u-as-a-function-of-x-and-y.}}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+    \hypertarget{answer-2-conjugate-gradient-cg}{%
+\subsection{Answer (2): Conjugate Gradient
+(CG)}\label{answer-2-conjugate-gradient-cg}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{for} \PY{n}{h}\PY{p}{,}\PY{n}{u} \PY{o+ow}{in} \PY{n}{U}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+    \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{n}{projection} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{3d}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{surf} \PY{o}{=} \PY{n}{ax}\PY{o}{.}\PY{n}{plot\PYZus{}surface}\PY{p}{(}\PY{n}{X\PYZus{}Y\PYZus{}dict}\PY{p}{[}\PY{n}{h}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{X\PYZus{}Y\PYZus{}dict}\PY{p}{[}\PY{n}{h}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{u}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{n}{cm}\PY{o}{.}\PY{n}{summer}\PY{p}{,}\PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{n}{fig}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{n}{surf}\PY{p}{,} \PY{n}{shrink}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{aspect}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}zlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{u}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Conjugate Gradient (CG): h = }\PY{l+s+si}{\PYZob{}}\PY{n}{h}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}box\PYZus{}aspect}\PY{p}{(}\PY{n}{aspect}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{zoom}\PY{o}{=}\PY{l+m+mf}{0.75}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{patch}\PY{o}{.}\PY{n}{set\PYZus{}edgecolor}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+    \PY{n}{ax}\PY{o}{.}\PY{n}{patch}\PY{o}{.}\PY{n}{set\PYZus{}linewidth}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}  
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_94_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_94_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_94_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+    \hypertarget{a-table-comparing-the-iterations-required-to-reach-the-convergence-criteria-for-jacobi-gauss-seidel-steepest-descent-and-conjugate-gradient-for-all-three-h-values.}{%
+\subsection{3. A table comparing the iterations required to reach the
+convergence criteria for Jacobi, Gauss-Seidel, Steepest Descent and
+Conjugate gradient for all three ''h''
+values.}\label{a-table-comparing-the-iterations-required-to-reach-the-convergence-criteria-for-jacobi-gauss-seidel-steepest-descent-and-conjugate-gradient-for-all-three-h-values.}}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+    \hypertarget{answer-3}{%
+\subsection{Answer (3):}\label{answer-3}}
+
+    \hypertarget{iterations-required-to-reach-the-convergence-criteria-for-jacobi-gauss-seidel-steepest-descent-and-conjugate-gradient}{%
+\subsection{Iterations required to reach the convergence criteria for
+Jacobi, Gauss-Seidel, Steepest Descent and Conjugate
+Gradient}\label{iterations-required-to-reach-the-convergence-criteria-for-jacobi-gauss-seidel-steepest-descent-and-conjugate-gradient}}
+
+    \[
+\begin{aligned}
+& \text {}\\
+&\begin{array}{|c|c|c|c|c|}
+\hline \hline \text { h } & \text { Jacobi } & \text { Gauss-Seidel } & \text { Steepest Descent }  & \text { Conjugate Gradient } \\
+\hline \frac{1}{10} & 293 & 157 & 297 & 29\\
+\hline
+\frac{1}{20} & 1077 & 574 & 1102 & 60\\
+\hline
+\frac{1}{40} & 3882 & 2069 & 3986 & 118\\
+\hline
+\end{array}
+\end{aligned}
+\]
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{J} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{293}\PY{p}{,}\PY{l+m+mi}{1077}\PY{p}{,}\PY{l+m+mi}{3882}\PY{p}{]}
+\PY{n}{GS} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{157}\PY{p}{,}\PY{l+m+mi}{574}\PY{p}{,}\PY{l+m+mi}{2069}\PY{p}{]}
+\PY{n}{SD} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{297}\PY{p}{,}\PY{l+m+mi}{1102}\PY{p}{,}\PY{l+m+mi}{3986}\PY{p}{]}
+\PY{n}{CG} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{29}\PY{p}{,}\PY{l+m+mi}{60}\PY{p}{,}\PY{l+m+mi}{118}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{loglog}\PY{p}{(}\PY{n}{H}\PY{p}{,}\PY{n}{J}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{label} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Jacobi}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{loglog}\PY{p}{(}\PY{n}{H}\PY{p}{,}\PY{n}{GS}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{d\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{label} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Gauss\PYZhy{}Seidel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{loglog}\PY{p}{(}\PY{n}{H}\PY{p}{,}\PY{n}{SD}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{label} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Steepest Descent}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{loglog}\PY{p}{(}\PY{n}{H}\PY{p}{,}\PY{n}{CG}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZca{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{label} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Conjugate Gradient}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{n}{which}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{minor}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{h}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterations}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_102_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{observations}{%
+\subsection{Observations:}\label{observations}}
+
+    \hypertarget{conjugate-gradient-method-requires-considerably-less-iterations-as-compared-to-other-methods}{%
+\subsubsection{1. Conjugate Gradient method requires considerably less
+iterations as compared to other
+methods}\label{conjugate-gradient-method-requires-considerably-less-iterations-as-compared-to-other-methods}}
+
+    \hypertarget{steepest-descent-method-is-the-slowest-method-among-all-the-reported-methods.}{%
+\subsubsection{2. Steepest Descent method is the slowest method among
+all the reported
+methods.}\label{steepest-descent-method-is-the-slowest-method-among-all-the-reported-methods.}}
+
+    \hypertarget{jacobi-method-is-marginally-faster-as-compared-to-the-steepest-descent-method.}{%
+\subsubsection{3. Jacobi method is marginally faster as compared to the
+Steepest Descent
+method.}\label{jacobi-method-is-marginally-faster-as-compared-to-the-steepest-descent-method.}}
+
+    \hypertarget{gauss-siedel-method-is-approximately-twice-as-fast-as-the-jacobi-and-the-steepest-descent-methods.}{%
+\subsubsection{4. Gauss-Siedel method is approximately twice as fast as
+the Jacobi and the Steepest Descent
+methods.}\label{gauss-siedel-method-is-approximately-twice-as-fast-as-the-jacobi-and-the-steepest-descent-methods.}}
+
+    \hypertarget{as-h-reduces-the-number-of-iterations-required-for-conjugate-gradient-method-increased-at-a-slower-rate-as-compared-to-the-other-methods}{%
+\subsubsection{5. As h reduces, the number of iterations required for
+Conjugate Gradient method increased at a slower rate as compared to the
+other
+methods}\label{as-h-reduces-the-number-of-iterations-required-for-conjugate-gradient-method-increased-at-a-slower-rate-as-compared-to-the-other-methods}}
+
+    \hypertarget{the-rate-of-increase-in-the-iterations-required-for-jacobi-gauss-seidel-and-steepest-descent-is-almost-the-same.-the-slopes-are-almost-equal-for-these-methods}{%
+\subsubsection{6. The rate of increase in the iterations required for
+Jacobi, Gauss-Seidel and Steepest Descent is almost the same. (The
+slopes are almost equal for these
+methods)}\label{the-rate-of-increase-in-the-iterations-required-for-jacobi-gauss-seidel-and-steepest-descent-is-almost-the-same.-the-slopes-are-almost-equal-for-these-methods}}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
